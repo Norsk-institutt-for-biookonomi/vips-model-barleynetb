@@ -484,7 +484,6 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
             // between calculation and observation
             WeatherUtil wUtil = new WeatherUtil();
             Date observationDate = wUtil.normalizeToExactDate(this.observation.getTimeOfObservation(), this.timeZone);
-            System.out.println("observationDate=" + observationDate);
             Double calculatedX = this.dataMatrix.getParamDoubleValueForDate(observationDate, BarleyNetBlotchModelDataMatrix.X_UNADJUSTED);
             Double infectedLeaves = this.observation.getObservedValue();
             Integer countedLeaves = this.observation.getDenominator();
