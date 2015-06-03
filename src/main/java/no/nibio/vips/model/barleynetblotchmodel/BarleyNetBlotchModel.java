@@ -41,6 +41,7 @@ import no.bioforsk.vips.observation.Observation;
 import no.bioforsk.vips.observation.ObservationImpl;
 import no.bioforsk.vips.pestmanagement.Spraying;
 import no.bioforsk.vips.pestmanagement.SprayingImpl;
+import no.bioforsk.vips.util.CommonNamespaces;
 import no.bioforsk.vips.util.InvalidAggregationTypeException;
 import no.bioforsk.vips.util.WeatherElements;
 import no.bioforsk.vips.util.WeatherObservationListException;
@@ -126,9 +127,13 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
                 result.setResultValidTime(currentDate);
                 result.setWarningStatus(warningStatus);
                 result.setValue(this.getModelId().toString(), BarleyNetBlotchModelDataMatrix.X_ADJUSTED, String.valueOf(xAdjusted));
-                
                 result.setValue(this.getModelId().toString(), BarleyNetBlotchModelDataMatrix.Y, String.valueOf(y));
-                
+                // Adding weather data
+                result.setValue(CommonNamespaces.NS_WEATHER, BarleyNetBlotchModelDataMatrix.TMD, String.valueOf(this.dataMatrix.getParamDoubleValueForDate(currentDate, BarleyNetBlotchModelDataMatrix.TMD)));
+                result.setValue(CommonNamespaces.NS_WEATHER, BarleyNetBlotchModelDataMatrix.TMDD0C, String.valueOf(this.dataMatrix.getParamDoubleValueForDate(currentDate, BarleyNetBlotchModelDataMatrix.TMDD0C)));
+                result.setValue(CommonNamespaces.NS_WEATHER, BarleyNetBlotchModelDataMatrix.RRD, String.valueOf(this.dataMatrix.getParamDoubleValueForDate(currentDate, BarleyNetBlotchModelDataMatrix.RRD)));
+                result.setValue(CommonNamespaces.NS_WEATHER, BarleyNetBlotchModelDataMatrix.RR28, String.valueOf(this.dataMatrix.getParamDoubleValueForDate(currentDate, BarleyNetBlotchModelDataMatrix.RR28)));
+                result.setValue(this.getModelId().toString(), BarleyNetBlotchModelDataMatrix.DG2410, String.valueOf(this.dataMatrix.getParamIntValueForDate(currentDate, BarleyNetBlotchModelDataMatrix.DG2410)));
                 results.add(result);
             }
             
@@ -435,17 +440,17 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
             // DG2410
             DG2410 += this.dataMatrix.getParamDoubleValueForDate(currentDate, BarleyNetBlotchModelDataMatrix.RRD) > 0.2 ?
                     1 : 0;
-            if(counter > 14)
+            if(counter > 10)
             {
                 // Substract the last one
                 cal.setTime(currentDate);
-                cal.add(Calendar.DATE, -14);
+                cal.add(Calendar.DATE, -10);
                 if(this.dataMatrix.getParamDoubleValueForDate(cal.getTime(), BarleyNetBlotchModelDataMatrix.RRD) > 0.2)
                 {
                     DG2410--;
                 }
             }
-            if(counter >= 14)
+            if(counter >= 10)
             {
                 cal.setTime(currentDate);
                 cal.add(Calendar.DATE, 11);
@@ -603,12 +608,13 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
             System.out.println("DG2410 == null at" + currentDate);
         }
         Double ed = (0.639 * DG2410) - (0.0465 * Math.pow(DG2410, 2)) - 0.502 * Math.sqrt(DG2410);
+        //System.out.println("ed=" + ed + "=(0.639 * " + DG2410 + ") - (0.0465 * Math.pow(" + DG2410 +", 2)) - 0.502 * Math.sqrt(" + DG2410 + ")");
         // Rainfall sum four to two weeks ago
         Double RR28 = this.dataMatrix.getParamDoubleValueForDate(currentDate, BarleyNetBlotchModelDataMatrix.RR28);
         Double disease14DaysAgo = this.dataMatrix.getParamDoubleValueForDate(cal.getTime(), diseaseParameter);
         //System.out.println("getDeltaX(" + currentDate + ", " + diseaseParameter + "): disease14daysago [" + cal.getTime() + "] = " + disease14DaysAgo);
         Double deltaX = (disease14DaysAgo / 100) * (1 - disease14DaysAgo / 100) * (ed * RR28 * 0.015) * 100;
-        //System.out.println("Deltax= " + deltaX);
+        //System.out.println("Deltax= " + deltaX + "=(" + disease14DaysAgo + " / 100) * (1 - " + disease14DaysAgo + " / 100) * (" + ed + "* RR28 * 0.015) * 100");
         return  deltaX;
     }
 
