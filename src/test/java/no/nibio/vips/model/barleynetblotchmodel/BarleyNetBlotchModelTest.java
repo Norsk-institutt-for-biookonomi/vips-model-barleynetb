@@ -16,7 +16,7 @@
  * along with BarleyNetBlotchModel.  If not, see <http://www.nibio.no/licenses/>.
  * 
  */
-package no.bioforsk.vips.model.barleynetblotchmodel;
+package no.nibio.vips.model.barleynetblotchmodel;
 
 import no.nibio.vips.model.barleynetblotchmodel.BarleyNetBlotchModel;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -34,14 +34,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import static junit.framework.Assert.fail;
-import no.bioforsk.vips.entity.ModelConfiguration;
-import no.bioforsk.vips.entity.Result;
-import no.bioforsk.vips.entity.WeatherObservation;
-import no.bioforsk.vips.model.ModelId;
-import no.bioforsk.vips.observation.Observation;
-import no.bioforsk.vips.observation.ObservationImpl;
-import no.bioforsk.vips.pestmanagement.Spraying;
-import no.bioforsk.vips.pestmanagement.SprayingImpl;
+import no.nibio.vips.entity.ModelConfiguration;
+import no.nibio.vips.entity.Result;
+import no.nibio.vips.entity.WeatherObservation;
+import no.nibio.vips.model.ModelId;
+import no.nibio.vips.observation.Observation;
+import no.nibio.vips.observation.ObservationImpl;
+import no.nibio.vips.pestmanagement.Spraying;
+import no.nibio.vips.pestmanagement.SprayingImpl;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
