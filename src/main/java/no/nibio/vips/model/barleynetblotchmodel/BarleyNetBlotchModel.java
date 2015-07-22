@@ -470,7 +470,8 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
      * If the observation is made AFTER spraying, don't change the default value
      * Otherwise, deduct by (see DOCS)
      */
-    private void calculateInitialDiseaseValue() {
+    private void calculateInitialDiseaseValue() throws ModelExcecutionException
+    {
         if(     this.observation == null 
                 || this.observation.getObservedValue() < 0
                 || (this.spraying != null && this.observation.getTimeOfObservation().compareTo(this.spraying.getSprayingDate()) > 0)
@@ -483,6 +484,7 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
             
             // We have to calculate total unadjusted disease first
             this.calculateDisease(this.getUnadjustedInitialDiseaseValue(),BarleyNetBlotchModelDataMatrix.X_UNADJUSTED);
+
             // Then check the unadjusted disease at observation date,
             // compare to observation, find correction value and then 
             // Adjust the initial disease value based on the relative difference 
@@ -490,6 +492,18 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
             WeatherUtil wUtil = new WeatherUtil();
             Date observationDate = wUtil.normalizeToExactDate(this.observation.getTimeOfObservation(), this.timeZone);
             Double calculatedX = this.dataMatrix.getParamDoubleValueForDate(observationDate, BarleyNetBlotchModelDataMatrix.X_UNADJUSTED);
+            
+            // If calculatedX is null, this might be because the day degree limit has passed
+            // We check for this and issue error message if necessary
+            if(calculatedX == null)
+            {
+                Date lastDayOfModelCalculation = this.getLastDateOfModelCalculation();
+                if(lastDayOfModelCalculation.compareTo(observationDate) <= 0)
+                {
+                    throw new ModelExcecutionException("Observation date is past period of model development calculation (day degrees exceeding " + this.dayDegreeLimit + ", ending at " + lastDayOfModelCalculation + ")");
+                }
+            }
+            
             Double infectedLeaves = this.observation.getObservedValue();
             Integer countedLeaves = this.observation.getDenominator();
             Double observedInfectionLeafAreaPercent = this.getInfectionLeafAreaPercent(infectedLeaves, countedLeaves);
@@ -727,6 +741,27 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
     private Double adjustForSpraying(Double originalX) {
         //System.out.println(originalX + " * ( 1 - " + this.spraying.getSprayingEffectFactor() + "=" + (originalX * ( 1 - this.spraying.getSprayingEffectFactor())));
         return originalX * ( 1 - this.spraying.getSprayingEffectFactor() );
+    }
+
+    private Date getLastDateOfModelCalculation() {
+        // The initial value is inserted from 14 to 28 days after sowing date
+        Calendar cal = Calendar.getInstance(this.timeZone);
+        cal.setTime(this.sowingDate);
+        cal.add(Calendar.DATE, 14);
+        Date currentDate = cal.getTime();
+        
+        
+        Double TMDD0C;
+        do
+        {
+            TMDD0C = this.dataMatrix.getParamDoubleValueForDate(currentDate, BarleyNetBlotchModelDataMatrix.TMDD0C);
+            
+            cal.setTime(currentDate);
+            cal.add(Calendar.DATE, 1);
+            currentDate = cal.getTime();
+        }
+        while(TMDD0C != null && TMDD0C < this.dayDegreeLimit);
+        return currentDate;
     }
 
     
