@@ -463,6 +463,7 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
             cal.add(Calendar.DATE, 1);
             currentDate = cal.getTime();
         }
+        //System.out.println(this.dataMatrix.toCSV());
     }
 
     /**
@@ -485,6 +486,7 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
             // We have to calculate total unadjusted disease first
             this.calculateDisease(this.getUnadjustedInitialDiseaseValue(),BarleyNetBlotchModelDataMatrix.X_UNADJUSTED);
 
+            //System.out.println(this.dataMatrix.toCSV());
             // Then check the unadjusted disease at observation date,
             // compare to observation, find correction value and then 
             // Adjust the initial disease value based on the relative difference 
