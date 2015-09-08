@@ -81,6 +81,7 @@ public class BarleyNetBlotchModelTest {
     public void testGetResult() throws Exception {
         System.out.println("getResult");
         ModelConfiguration config = this.getConfiguration("/weatherdata_boe_2014.json");
+        //ModelConfiguration config = this.getConfiguration("/weatherdata_aas_2014.json");
         BarleyNetBlotchModel instance = new BarleyNetBlotchModel();
         config.setConfigParameter("sowingDate", "2014-04-01");
         // Using "Tyra" as barley variant
@@ -95,7 +96,7 @@ public class BarleyNetBlotchModelTest {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         format.setTimeZone(tz);
         
-        obs.setTimeOfObservation(format.parse("2014-06-10"));
+        obs.setTimeOfObservation(format.parse("2014-07-20"));
         config.setConfigParameter("observation", obs);
         
         // Setting spraying
