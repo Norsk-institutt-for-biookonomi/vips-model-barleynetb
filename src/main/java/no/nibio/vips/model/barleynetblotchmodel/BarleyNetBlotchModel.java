@@ -75,7 +75,7 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
     private final Double RR28Threshold = 21.0; // Spec says 2.0, but old VIPS impl states 21.0
     private final Integer DG2410Threshold = 3;
     // We stop disease calculation when we pass this day degree limit
-    private final Double dayDegreeLimit = 900.0;
+    private final Double dayDegreeLimit = 1500.0;
     
     public BarleyNetBlotchModel()
     {
@@ -279,7 +279,7 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
         dateFormat.setTimeZone(this.timeZone);
         mapper.setDateFormat(dateFormat);
         this.sowingDate = mapper.convertValue(config.getConfigParameter("sowingDate"), Date.class);
-        
+                
         // Set spraying (if any)
         this.spraying = mapper.convertValue(config.getConfigParameter("spraying"), SprayingImpl.class);
         // Do we have same crop this year as last season? Affects initial value.
@@ -354,11 +354,10 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
         if(dataMatrix.getFirstDateWithParameterValue(BarleyNetBlotchModelDataMatrix.TMD) == null)
         {
             try {
-                List<WeatherObservation> dailyTemperatures = new WeatherUtil().getAggregatedDailyValues(
-                        TM,
+                List<WeatherObservation> dailyTemperatures = new WeatherUtil().getAggregatedDailyValues(TM,
                         this.timeZone,
                         15,
-                        WeatherUtil.AGGREGATION_TYPE_AVERAGE);
+                        WeatherUtil.AGGREGATION_TYPE_AVERAGE, 0);
                 if(dailyTemperatures != null)
                 {
                     for(WeatherObservation obs:dailyTemperatures)
@@ -374,11 +373,10 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
         if(dataMatrix.getFirstDateWithParameterValue(BarleyNetBlotchModelDataMatrix.RRD) == null)
         {
             try {
-                List<WeatherObservation> dailyTemperatures = new WeatherUtil().getAggregatedDailyValues(
-                        RR,
+                List<WeatherObservation> dailyTemperatures = new WeatherUtil().getAggregatedDailyValues(RR,
                         this.timeZone,
                         15,
-                        WeatherUtil.AGGREGATION_TYPE_SUM);
+                        WeatherUtil.AGGREGATION_TYPE_SUM, 0);
                 if(dailyTemperatures != null)
                 {
                     for(WeatherObservation obs:dailyTemperatures)
@@ -388,6 +386,19 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
                 }
             } catch (WeatherObservationListException | InvalidAggregationTypeException ex) {
                 throw new ConfigValidationException(ex.getMessage());
+            }
+        }
+        
+        Date lastWeatherDataDate = dataMatrix.getLastDateWithParameterValue(BarleyNetBlotchModelDataMatrix.TMD);
+        if(lastWeatherDataDate == null)
+        {
+            throw new ConfigValidationException("Apparently missing all daily data for mean temperature");
+        }
+        else
+        {
+            if(lastWeatherDataDate.getTime() - sowingDate.getTime() < (18 * 24 * 60 * 60 * 1000))
+            {
+                throw new ConfigValidationException("Must have at least 18 days of weather data after sowing date");
             }
         }
     }
