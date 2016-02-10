@@ -65,7 +65,7 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
     private Double resistanceFactor;
     public final static Double DEFAULT_CONVERSION_CORRECTION_FACTOR = 5.0;
     private Double conversionCorrectionFactor;
-    private Observation observation;
+    private BarleyNetBlotchObservation observation;
     private Boolean sameCropAsLastSeason;
     private Boolean plowed;
     private Spraying spraying;
@@ -311,7 +311,7 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX"));
         
         // Set observation (if any)
-        this.observation = mapper.convertValue(config.getConfigParameter("observation"), ObservationImpl.class);
+        this.observation = mapper.convertValue(config.getConfigParameter("observation"), BarleyNetBlotchObservation.class);
         
         // Importing weather data, creating collections
         // Can accept both hourly and daily data
@@ -485,7 +485,7 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
     private void calculateInitialDiseaseValue() throws ModelExcecutionException
     {
         if(     this.observation == null 
-                || this.observation.getObservedValue() < 0
+                || this.observation.getPercentInfectedLeaves() < 0
                 || (this.spraying != null && this.observation.getTimeOfObservation().compareTo(this.spraying.getSprayingDate()) > 0)
         )
         {
@@ -517,8 +517,8 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
                 }
             }
             
-            Double infectedLeaves = this.observation.getObservedValue();
-            Integer countedLeaves = this.observation.getDenominator();
+            Double infectedLeaves = this.observation.getPercentInfectedLeaves();
+            Integer countedLeaves = 100;
             Double observedInfectionLeafAreaPercent = this.getInfectionLeafAreaPercent(infectedLeaves, countedLeaves);
             Double adjustedInitialDiseaseValue = null;
             if(calculatedX > 0.0)
@@ -598,7 +598,7 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
                     if(new WeatherUtil().normalizeToExactDate(this.observation.getTimeOfObservation(), this.timeZone).compareTo(currentDate) == 0)
                     {
                         // Adjust to correct value
-                        newX = this.getInfectionLeafAreaPercent(this.observation.getObservedValue(), this.observation.getDenominator());
+                        newX = this.getInfectionLeafAreaPercent(this.observation.getPercentInfectedLeaves(), 100);
                         
                     }
                     // If today is within spray effect period: Leave value unchanged

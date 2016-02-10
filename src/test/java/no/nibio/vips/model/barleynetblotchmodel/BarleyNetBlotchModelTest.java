@@ -73,6 +73,20 @@ public class BarleyNetBlotchModelTest {
     @After
     public void tearDown() {
     }
+    
+    @Test
+    public void testBarleyNetBlotchObservation()
+    {
+        System.out.println("testBarleyNetBlotchObservation");
+        BarleyNetBlotchObservation b = new BarleyNetBlotchObservation();
+        Double expectedResult = 76.4;
+        b.setPercentInfectedLeaves(expectedResult);
+        
+        Double result = b.getPercentInfectedLeaves();
+        assertEquals(expectedResult, result);
+        
+        
+    }
 
     /**
      * Test of getResult method, of class BarleyNetBlotchModel.
@@ -88,9 +102,8 @@ public class BarleyNetBlotchModelTest {
         config.setConfigParameter("resistanceFactor", "5");
         config.setConfigParameter("conversionCorrectionFactor", 5);
         config.setConfigParameter("sameCropAsLastSeason", "true");
-        ObservationImpl obs = new ObservationImpl();
-        obs.setObservedValue(75.0);
-        obs.setDenominator(100);
+        BarleyNetBlotchObservation obs = new BarleyNetBlotchObservation();
+        obs.setPercentInfectedLeaves(75.0);
         obs.setName("Byggbrunflekk");
         TimeZone tz = TimeZone.getTimeZone("Europe/Oslo");
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -311,6 +324,7 @@ public class BarleyNetBlotchModelTest {
             
             return config;
         } catch (IOException ex) {
+            ex.printStackTrace();
             return null;
         } 
     }
