@@ -19,10 +19,7 @@
 
 package no.nibio.vips.model.barleynetblotchmodel;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import no.nibio.vips.observation.ObservationImpl;

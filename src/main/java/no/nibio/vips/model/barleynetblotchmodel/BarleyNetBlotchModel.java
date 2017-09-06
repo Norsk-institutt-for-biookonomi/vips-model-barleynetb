@@ -37,8 +37,6 @@ import no.nibio.vips.model.ConfigValidationException;
 import no.nibio.vips.model.Model;
 import no.nibio.vips.model.ModelExcecutionException;
 import no.nibio.vips.model.ModelId;
-import no.nibio.vips.observation.Observation;
-import no.nibio.vips.observation.ObservationImpl;
 import no.nibio.vips.pestmanagement.Spraying;
 import no.nibio.vips.pestmanagement.SprayingImpl;
 import no.nibio.vips.util.CommonNamespaces;
@@ -124,7 +122,7 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
                 }
                 
                 Result result = new ResultImpl();
-                result.setResultValidTime(currentDate);
+                result.setValidTimeStart(currentDate);
                 result.setWarningStatus(warningStatus);
                 result.setValue(this.getModelId().toString(), BarleyNetBlotchModelDataMatrix.X_ADJUSTED, String.valueOf(xAdjusted));
                 result.setValue(this.getModelId().toString(), BarleyNetBlotchModelDataMatrix.Y, String.valueOf(y));

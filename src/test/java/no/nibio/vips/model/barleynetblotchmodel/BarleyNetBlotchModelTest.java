@@ -18,7 +18,6 @@
  */
 package no.nibio.vips.model.barleynetblotchmodel;
 
-import no.nibio.vips.model.barleynetblotchmodel.BarleyNetBlotchModel;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -29,18 +28,13 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import static junit.framework.Assert.fail;
 import no.nibio.vips.entity.ModelConfiguration;
 import no.nibio.vips.entity.Result;
 import no.nibio.vips.entity.WeatherObservation;
 import no.nibio.vips.model.ModelId;
-import no.nibio.vips.observation.Observation;
-import no.nibio.vips.observation.ObservationImpl;
-import no.nibio.vips.pestmanagement.Spraying;
 import no.nibio.vips.pestmanagement.SprayingImpl;
 import org.junit.After;
 import org.junit.AfterClass;
