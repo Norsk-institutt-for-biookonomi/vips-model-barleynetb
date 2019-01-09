@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 NIBIO <http://www.nibio.no/>. 
+ * Copyright (c) 2019 NIBIO <http://www.nibio.no/>. 
  * 
  * This file is part of BarleyNetBlotchModel.
  * BarleyNetBlotchModel is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@ package no.nibio.vips.model.barleynetblotchmodel;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,12 +42,13 @@ import no.nibio.vips.pestmanagement.Spraying;
 import no.nibio.vips.pestmanagement.SprayingImpl;
 import no.nibio.vips.util.CommonNamespaces;
 import no.nibio.vips.util.InvalidAggregationTypeException;
+import no.nibio.vips.util.ModelUtil;
 import no.nibio.vips.util.WeatherElements;
 import no.nibio.vips.util.WeatherObservationListException;
 import no.nibio.vips.util.WeatherUtil;
 
 /**
- * @copyright 2015 <a href="http://www.nibio.no/">NIBIO</a>
+ * @copyright 2019 <a href="http://www.nibio.no/">NIBIO</a>
  * @author Tor-Einar Skog <tor-einar.skog@nibio.no>
  */
 public class BarleyNetBlotchModel extends I18nImpl implements Model{
@@ -75,10 +77,14 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
     // We stop disease calculation when we pass this day degree limit
     private final Double dayDegreeLimit = 1500.0;
     
+    private final ModelUtil modelUtil;
+    
     public BarleyNetBlotchModel()
     {
         // Telling super class where to find resource files
         super("no.nibio.vips.model.barleynetblotchmodel.texts");
+        
+        this.modelUtil = new ModelUtil();
     }
 
     @Override
@@ -190,7 +196,14 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
 
     @Override
     public String getModelDescription(String language) {
-        return this.getText("description", language);
+        try
+        {
+            return this.modelUtil.getTextWithBase64EncodedImages(this.getText("description", language), this.getClass());
+        }
+        catch(IOException ex)
+        {
+            return this.getText("description", language);
+        }
     }
 
     @Override
