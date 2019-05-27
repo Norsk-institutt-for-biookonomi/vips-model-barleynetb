@@ -105,11 +105,12 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
         
         Double TMDD0C;
         List<Result> results = new ArrayList<>();
+        Double xAdjusted = 0.0;
         do
         {
             TMDD0C = this.dataMatrix.getParamDoubleValueForDate(currentDate, BarleyNetBlotchModelDataMatrix.TMDD0C);
             
-            Double xAdjusted = this.dataMatrix.getParamDoubleValueForDate(currentDate, BarleyNetBlotchModelDataMatrix.X_ADJUSTED);
+            xAdjusted = this.dataMatrix.getParamDoubleValueForDate(currentDate, BarleyNetBlotchModelDataMatrix.X_ADJUSTED);
             Double y = this.dataMatrix.getParamDoubleValueForDate(currentDate, BarleyNetBlotchModelDataMatrix.Y);
             Integer warningStatus = Result.WARNING_STATUS_NO_WARNING;
             if(xAdjusted != null && y != null)
@@ -145,7 +146,7 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
             cal.add(Calendar.DATE, 1);
             currentDate = cal.getTime();
         }
-        while(TMDD0C != null && TMDD0C < this.dayDegreeLimit);
+        while(TMDD0C != null && TMDD0C < this.dayDegreeLimit && xAdjusted >= 0.0);
         
         return results;
     }
