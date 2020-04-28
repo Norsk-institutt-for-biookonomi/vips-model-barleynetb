@@ -330,9 +330,7 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
         WeatherUtil wUtil = new WeatherUtil();
         this.dataMatrix = new BarleyNetBlotchModelDataMatrix();
         
-        
-        List<WeatherObservation> observations = mapper.convertValue(config.getConfigParameter("observations"), new TypeReference<List<WeatherObservation>>(){});
-        
+        List<WeatherObservation> observations = this.modelUtil.extractWeatherObservationList(config.getConfigParameter("observations"));
         
         for(WeatherObservation o:observations)
         {
