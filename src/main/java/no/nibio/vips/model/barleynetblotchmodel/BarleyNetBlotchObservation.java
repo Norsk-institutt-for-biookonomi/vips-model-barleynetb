@@ -21,6 +21,7 @@ package no.nibio.vips.model.barleynetblotchmodel;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.io.IOException;
 import no.nibio.vips.observation.ObservationImpl;
 
@@ -28,6 +29,7 @@ import no.nibio.vips.observation.ObservationImpl;
  * @copyright 2016 <a href="http://www.nibio.no/">NIBIO</a>
  * @author Tor-Einar Skog <tor-einar.skog@nibio.no>
  */
+@JsonDeserialize(as = BarleyNetBlotchObservation.class)
 public class BarleyNetBlotchObservation extends ObservationImpl{
 
     public Double getPercentInfectedLeaves()
