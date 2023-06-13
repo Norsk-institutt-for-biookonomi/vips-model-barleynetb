@@ -530,7 +530,7 @@ public class BarleyNetBlotchModel extends I18nImpl implements Model{
             Integer countedLeaves = 100;
             Double observedInfectionLeafAreaPercent = this.getInfectionLeafAreaPercent(infectedLeaves, countedLeaves);
             Double adjustedInitialDiseaseValue = null;
-            if(calculatedX > 0.0)
+            if(calculatedX != null && calculatedX > 0.0)
             {
                 adjustedInitialDiseaseValue = this.getUnadjustedInitialDiseaseValue() * (observedInfectionLeafAreaPercent / calculatedX);
             }
