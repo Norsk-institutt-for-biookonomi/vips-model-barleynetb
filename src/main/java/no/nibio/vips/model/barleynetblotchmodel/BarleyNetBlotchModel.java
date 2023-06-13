@@ -19,7 +19,6 @@
 
 package no.nibio.vips.model.barleynetblotchmodel;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.text.DateFormat;
