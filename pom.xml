@@ -8,14 +8,14 @@
     </parent>
     <groupId>no.nibio.vips.model</groupId>
     <artifactId>BarleyNetBlotchModel</artifactId>
-    <version>1.1.17</version>
+    <version>1.1.18-SNAPSHOT</version>
     <packaging>jar</packaging>
-
+    
     <dependencies>
         <dependency>
             <groupId>no.nibio.vips</groupId>
             <artifactId>VIPSCommon</artifactId>
-            <version>3.0.3</version>
+            <version>3.0.4</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -26,7 +26,7 @@
         </dependency>
     </dependencies>
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 </project>
